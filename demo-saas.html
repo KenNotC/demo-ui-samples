@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaaS Documentation — GlobalDocs Atlas Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#f9f8f6;--surface:#ffffff;--surface-2:#f2f1ef;--border:#e4e2dd;
+      --text:#1a1917;--text-2:#6b6760;--text-3:#9c9890;
+      --accent:#2a5bd7;--accent-soft:#edf1fd;
+      --code-bg:#f2f1ef;--code-border:#dddbd6;
+      --sidebar-w:272px;--header-h:52px;--radius:6px;
+      --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
+      --transition:0.18s ease;
+    }
+    [data-theme="dark"] {
+      --bg:#111110;--surface:#191918;--surface-2:#222220;--border:#2e2d2b;
+      --text:#e8e6e1;--text-2:#9a9792;--text-3:#5c5a57;
+      --accent:#4f7ef5;--accent-soft:#1a2340;
+      --code-bg:#151514;--code-border:#2a2927;
+      --shadow:0 1px 3px rgba(0,0,0,0.3),0 1px 2px rgba(0,0,0,0.2);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{font-size:16px;scroll-behavior:smooth;}
+    body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;transition:background var(--transition),color var(--transition);}
+    a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
+    .demo-banner{background:var(--accent);color:#fff;text-align:center;padding:10px 16px;font-size:0.82rem;font-family:'IBM Plex Mono',monospace;position:relative;z-index:200;}
+    .demo-banner a{color:#fff;font-weight:600;text-decoration:underline;}
+    .topbar{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:100;transition:background var(--transition),border-color var(--transition);}
+    .topbar-left{display:flex;align-items:center;height:100%;}
+    .menu-toggle{display:none;align-items:center;justify-content:center;width:var(--header-h);height:var(--header-h);background:none;border:none;cursor:pointer;color:var(--text-2);flex-shrink:0;}
+    .brand{display:flex;align-items:center;gap:10px;padding:0 20px;height:100%;font-size:0.875rem;font-weight:600;color:var(--text);letter-spacing:-0.01em;text-decoration:none;}
+    .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+    .topbar-right{display:flex;align-items:center;gap:12px;}
+    .version-tag{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--text-3);background:var(--surface-2);border:1px solid var(--border);padding:2px 8px;border-radius:100px;}
+    .theme-toggle{width:36px;height:36px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all var(--transition);flex-shrink:0;}
+    .theme-toggle:hover{background:var(--border);color:var(--text);}
+    .icon-sun,.icon-moon{width:16px;height:16px;}
+    [data-theme="light"] .icon-moon{display:none;}[data-theme="dark"] .icon-sun{display:none;}
+    .shell{display:flex;padding-top:var(--header-h);min-height:100vh;}
+    .sidebar{position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:24px 0 40px;transition:background var(--transition),border-color var(--transition),transform var(--transition);z-index:90;}
+    .sidebar::-webkit-scrollbar{width:4px;}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+    .nav-group{margin-bottom:28px;}
+    .nav-group-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);padding:0 20px;margin-bottom:6px;}
+    .nav-link{display:flex;align-items:center;gap:10px;padding:7px 20px;font-size:0.84rem;font-weight:400;color:var(--text-2);text-decoration:none;border-left:2px solid transparent;transition:all var(--transition);line-height:1.4;}
+    .nav-link:hover{color:var(--text);background:var(--surface-2);text-decoration:none;}
+    .nav-link.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-soft);font-weight:500;}
+    .nav-link-icon{width:14px;height:14px;flex-shrink:0;opacity:0.6;}.nav-link.active .nav-link-icon{opacity:1;}
+    .main{margin-left:var(--sidebar-w);flex:1;min-width:0;}
+    .content{max-width:740px;margin:0 auto;padding:48px 40px 80px;}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-3);margin-bottom:28px;}
+    .breadcrumb-sep{opacity:0.4;}.breadcrumb a{color:var(--text-3);text-decoration:none;}.breadcrumb span:last-child{color:var(--text-2);}
+    .page-label{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:10px;}
+    h1{font-size:2rem;font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:var(--text);margin-bottom:14px;}
+    .page-intro{font-size:1.05rem;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:36px;border-bottom:1px solid var(--border);padding-bottom:32px;}
+    h2{font-size:1.15rem;font-weight:600;letter-spacing:-0.02em;color:var(--text);margin:40px 0 12px;}
+    h3{font-size:0.95rem;font-weight:600;color:var(--text);margin:28px 0 8px;}
+    p{font-size:0.92rem;color:var(--text-2);margin-bottom:16px;}
+    ul,ol{padding-left:20px;margin-bottom:16px;}
+    li{font-size:0.92rem;color:var(--text-2);margin-bottom:6px;}li strong{color:var(--text);}
+    pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:20px;overflow-x:auto;margin:20px 0;}
+    code{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--text);line-height:1.7;}
+    p code,li code{background:var(--code-bg);border:1px solid var(--code-border);padding:1px 6px;border-radius:3px;font-size:0.8rem;}
+    .code-header{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--code-border);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:8px 16px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-3);}
+    .code-header+pre{border-radius:0 0 var(--radius) var(--radius);margin-top:0;}
+    .callout{border-radius:var(--radius);padding:14px 18px;margin:20px 0;font-size:0.88rem;border-left:3px solid;display:flex;gap:12px;align-items:flex-start;}
+    .callout-icon{flex-shrink:0;margin-top:1px;}
+    .callout.note{background:var(--accent-soft);border-color:var(--accent);color:var(--text-2);}
+    .callout.tip{background:#f0fdf4;border-color:#22c55e;color:#166534;}[data-theme="dark"] .callout.tip{background:#0d1f13;color:#4ade80;}
+    .callout.warning{background:#fef9ec;border-color:#f59e0b;color:#78600a;}[data-theme="dark"] .callout.warning{background:#1f1a0d;color:#c9a84c;}
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:20px 0;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:box-shadow var(--transition),border-color var(--transition);}
+    .card:hover{box-shadow:var(--shadow);border-color:var(--accent);}
+    .card-title{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:6px;}
+    .card-body{font-size:0.8rem;color:var(--text-3);line-height:1.5;}
+    .endpoint{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin:8px 0;}
+    .method{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;font-weight:500;padding:3px 8px;border-radius:3px;flex-shrink:0;}
+    .method.get{background:#dbeafe;color:#1d4ed8;}[data-theme="dark"] .method.get{background:#1e3a5f;color:#93c5fd;}
+    .method.post{background:#dcfce7;color:#15803d;}[data-theme="dark"] .method.post{background:#0d2818;color:#86efac;}
+    .method.delete{background:#fee2e2;color:#b91c1c;}[data-theme="dark"] .method.delete{background:#2d0e0e;color:#fca5a5;}
+    .endpoint-path{font-family:'IBM Plex Mono',monospace;font-size:0.84rem;color:var(--text);}
+    .table-wrap{overflow-x:auto;margin:20px 0;}
+    table{width:100%;border-collapse:collapse;font-size:0.87rem;}
+    th{background:var(--surface-2);color:var(--text);font-weight:600;text-align:left;padding:10px 14px;border-bottom:2px solid var(--border);font-size:0.82rem;}
+    td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top;}
+    tr:last-child td{border-bottom:none;}tr:hover td{background:var(--surface-2);}
+    .swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px;}
+    .swatch{width:40px;height:40px;border-radius:var(--radius);border:1px solid var(--border);flex-shrink:0;}
+    .token-table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:16px 0 32px;}
+    .token-table th{background:var(--surface-2);color:var(--text);font-weight:600;text-align:left;padding:10px 14px;border-bottom:2px solid var(--border);font-size:0.8rem;}
+    .token-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:middle;}
+    .token-table tr:last-child td{border-bottom:none;}tr:hover td{background:var(--surface-2);}
+    .token-name{font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--accent);}
+    .token-value{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--text-3);}
+    .token-swatch{width:20px;height:20px;border-radius:3px;border:1px solid var(--border);display:inline-block;vertical-align:middle;margin-right:8px;}
+    .step{display:flex;gap:16px;margin-bottom:28px;align-items:flex-start;}
+    .step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .step-body h3{margin-top:0;}
+    .demo-gate{background:var(--surface-2);border:2px dashed var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;margin:32px 0;}
+    .demo-gate-title{font-weight:600;color:var(--text);font-size:1rem;margin-bottom:8px;}
+    .demo-gate-sub{font-size:0.85rem;color:var(--text-3);margin-bottom:20px;}
+    .demo-gate-btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;transition:opacity 0.15s;}
+    .demo-gate-btn:hover{opacity:0.85;text-decoration:none;}
+    .page-nav{display:flex;justify-content:space-between;gap:12px;margin-top:56px;padding-top:28px;border-top:1px solid var(--border);}
+    .page-nav-btn{display:flex;flex-direction:column;gap:4px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:all var(--transition);flex:1;max-width:48%;}
+    .page-nav-btn:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decoration:none;}
+    .page-nav-btn.next{text-align:right;}
+    .page-nav-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;}
+    .page-nav-title{font-size:0.875rem;font-weight:500;color:var(--accent);}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:80;}
+    @media(max-width:860px){
+      .menu-toggle{display:flex;}
+      .sidebar{transform:translateX(-100%);}
+      .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.15);}
+      .overlay.open{display:block;}
+      .main{margin-left:0;}
+      .content{padding:32px 20px 60px;}
+      h1{font-size:1.6rem;}
+      .card-grid{grid-template-columns:1fr;}
+      .page-nav{flex-direction:column;}.page-nav-btn{max-width:100%;}.page-nav-btn.next{text-align:left;}
+    }
+    @media print{.demo-banner,.topbar,.sidebar,.page-nav,.overlay{display:none!important;}.main{margin-left:0;}.content{padding:0;max-width:100%;}}
+</style>
+</head>
+<body>
+<div class="demo-banner">✦ Live demo — content intentionally limited. Full template: <a href="https://gumroad.com" target="_blank">GlobalDocs Atlas on Gumroad →</a></div>
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect y="2" width="18" height="2" rx="1" fill="currentColor"/><rect y="8" width="18" height="2" rx="1" fill="currentColor"/><rect y="14" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+    <a href="index.html" class="brand"><span class="brand-dot"></span>GlobalDocs Atlas</a>
+  </div>
+  <div class="topbar-right">
+    <span class="version-tag">v1.0 — Demo</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <svg class="icon-moon" viewBox="0 0 16 16" fill="none"><path d="M13.5 10A6 6 0 016 2.5a6 6 0 100 11 6 6 0 007.5-3.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+<div class="overlay" id="overlay"></div>
+<div class="shell">
+  <nav class="sidebar" id="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-label">Getting Started</div>
+      <a href="index.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M4 7h6M4 4.5h6M4 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Introduction</a>
+      <a href="quick-start.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M7 1L1 7.5h4.5V13L13 6.5H8.5V1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Quick Start</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Guides</div>
+      <a href="guide-structure.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M2 2h4v4H2zM8 2h4v4H8zM2 8h4v4H2zM8 8h4v4H8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Site Structure</a>
+      <a href="guide-customise.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Customisation</a>
+      <a href="guide-deploy.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M7 9V1M4 4l3-3 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h12v2H1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Deployment</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Reference</div>
+      <a href="ref-components.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="2" rx="1" fill="currentColor"/><rect x="1" y="8" width="8" height="2" rx="1" fill="currentColor"/><rect x="1" y="1" width="6" height="2" rx="1" fill="currentColor"/></svg>Components</a>
+      <a href="ref-tokens.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Design Tokens</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Demo Templates</div>
+      <a href="demo-api.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M2 5l3-3 3 3M8 9l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 2v10M9 2v10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>API Docs Example</a>
+      <a href="demo-saas.html" class="nav-link active"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M1 6h12" stroke="currentColor" stroke-width="1.4"/><circle cx="3.5" cy="4.5" r="0.8" fill="currentColor"/><circle cx="6" cy="4.5" r="0.8" fill="currentColor"/></svg>SaaS Docs Example</a>
+    </div>
+  </nav>
+  <main class="main">
+    <div class="content">
+      <div class="breadcrumb"><a href="index.html">Docs</a> › <a href="index.html">Demo Templates</a> › <span>SaaS Docs</span></div>
+      <div class="page-label">Demo Template</div>
+      
+<h1>SaaS Documentation</h1>
+<p class="page-intro">This page demonstrates the SaaS product documentation layout. The full template includes a complete starter covering every section a SaaS product typically needs.</p>
+
+<h2>Overview</h2>
+<p>Your product description goes here. The full template includes pre-structured sections for every part of a typical SaaS documentation site.</p>
+
+<div class="card-grid">
+  <div class="card"><div class="card-title">Fast setup</div><div class="card-body">Connect in minutes. No engineering required for standard integrations.</div></div>
+  <div class="card"><div class="card-title">Secure by default</div><div class="card-body">Data encrypted at rest and in transit.</div></div>
+  <div class="card"><div class="card-title">Scales with you</div><div class="card-body">From solo projects to enterprise teams.</div></div>
+</div>
+
+<h2>Billing (demo)</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Plan</th><th>Users</th><th>Price</th></tr></thead>
+  <tbody>
+    <tr><td>Free</td><td>Up to 5</td><td>Free</td></tr>
+    <tr><td>Pro</td><td>Up to 25</td><td>$49 / month</td></tr>
+    <tr><td>Business</td><td>Unlimited</td><td>$199 / month</td></tr>
+  </tbody>
+</table></div>
+
+<h2>What the full template includes</h2>
+<ul>
+  <li>Getting started with numbered onboarding steps</li>
+  <li>Authentication section (email/password and SSO)</li>
+  <li>Core features section template</li>
+  <li>Billing section with plan table</li>
+  <li>Integrations section</li>
+  <li>Data export and privacy section</li>
+  <li>Troubleshooting with 5 pre-written common issues</li>
+  <li>Support contact section</li>
+</ul>
+
+<div class="demo-gate">
+  <div class="demo-gate-title">Full content available in the complete template</div>
+  <div class="demo-gate-sub">This demo shows the layout and navigation. The purchased template includes complete, usable instructions for every section on this page.</div>
+  <a href="https://gumroad.com" class="demo-gate-btn" target="_blank">Get GlobalDocs Atlas →</a>
+</div>
+
+      <div class="page-nav">
+        <a href="demo-api.html" class="page-nav-btn"><span class="page-nav-label">← Previous</span><span class="page-nav-title">API Docs Example</span></a>
+        <div></div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+(function(){
+  const html=document.documentElement;
+  const saved=localStorage.getItem('gda-theme');
+  const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  html.setAttribute('data-theme',saved||(prefersDark?'dark':'light'));
+  document.getElementById('themeToggle').addEventListener('click',function(){
+    const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);localStorage.setItem('gda-theme',next);
+  });
+  const sb=document.getElementById('sidebar');const ov=document.getElementById('overlay');
+  function open(){sb.classList.add('open');ov.classList.add('open');}
+  function close(){sb.classList.remove('open');ov.classList.remove('open');}
+  document.getElementById('menuToggle').addEventListener('click',function(){sb.classList.contains('open')?close():open();});
+  ov.addEventListener('click',close);
+  sb.querySelectorAll('.nav-link').forEach(function(l){l.addEventListener('click',function(){if(window.innerWidth<=860)close();});});
+})();
+</script>
+</body>
+</html>
