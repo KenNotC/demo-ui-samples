@@ -1,230 +1,242 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Site Structure — GlobalDocs Atlas Demo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg:#f9f8f6;--surface:#ffffff;--surface-2:#f2f1ef;--border:#e4e2dd;
-      --text:#1a1917;--text-2:#6b6760;--text-3:#9c9890;
-      --accent:#2a5bd7;--accent-soft:#edf1fd;
-      --code-bg:#f2f1ef;--code-border:#dddbd6;
-      --sidebar-w:272px;--header-h:52px;--radius:6px;
-      --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
-      --transition:0.18s ease;
-    }
-    [data-theme="dark"] {
-      --bg:#111110;--surface:#191918;--surface-2:#222220;--border:#2e2d2b;
-      --text:#e8e6e1;--text-2:#9a9792;--text-3:#5c5a57;
-      --accent:#4f7ef5;--accent-soft:#1a2340;
-      --code-bg:#151514;--code-border:#2a2927;
-      --shadow:0 1px 3px rgba(0,0,0,0.3),0 1px 2px rgba(0,0,0,0.2);
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{font-size:16px;scroll-behavior:smooth;}
-    body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;transition:background var(--transition),color var(--transition);}
-    a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
-    .demo-banner{background:var(--accent);color:#fff;text-align:center;padding:10px 16px;font-size:0.82rem;font-family:'IBM Plex Mono',monospace;position:relative;z-index:200;}
-    .demo-banner a{color:#fff;font-weight:600;text-decoration:underline;}
-    .topbar{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px 0 0;z-index:100;transition:background var(--transition),border-color var(--transition);}
-    .topbar-left{display:flex;align-items:center;height:100%;}
-    .menu-toggle{display:none;align-items:center;justify-content:center;width:var(--header-h);height:var(--header-h);background:none;border:none;cursor:pointer;color:var(--text-2);flex-shrink:0;}
-    .brand{display:flex;align-items:center;gap:10px;padding:0 20px;height:100%;font-size:0.875rem;font-weight:600;color:var(--text);letter-spacing:-0.01em;text-decoration:none;}
-    .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;}
-    .topbar-right{display:flex;align-items:center;gap:12px;}
-    .version-tag{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--text-3);background:var(--surface-2);border:1px solid var(--border);padding:2px 8px;border-radius:100px;}
-    .theme-toggle{width:36px;height:36px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface-2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all var(--transition);flex-shrink:0;}
-    .theme-toggle:hover{background:var(--border);color:var(--text);}
-    .icon-sun,.icon-moon{width:16px;height:16px;}
-    [data-theme="light"] .icon-moon{display:none;}[data-theme="dark"] .icon-sun{display:none;}
-    .shell{display:flex;padding-top:var(--header-h);min-height:100vh;}
-    .sidebar{position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:24px 0 40px;transition:background var(--transition),border-color var(--transition),transform var(--transition);z-index:90;}
-    .sidebar::-webkit-scrollbar{width:4px;}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-    .nav-group{margin-bottom:28px;}
-    .nav-group-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);padding:0 20px;margin-bottom:6px;}
-    .nav-link{display:flex;align-items:center;gap:10px;padding:7px 20px;font-size:0.84rem;font-weight:400;color:var(--text-2);text-decoration:none;border-left:2px solid transparent;transition:all var(--transition);line-height:1.4;}
-    .nav-link:hover{color:var(--text);background:var(--surface-2);text-decoration:none;}
-    .nav-link.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-soft);font-weight:500;}
-    .nav-link-icon{width:14px;height:14px;flex-shrink:0;opacity:0.6;}.nav-link.active .nav-link-icon{opacity:1;}
-    .main{margin-left:var(--sidebar-w);flex:1;min-width:0;}
-    .content{max-width:740px;margin:0 auto;padding:48px 40px 80px;}
-    .breadcrumb{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-3);margin-bottom:28px;}
-    .breadcrumb-sep{opacity:0.4;}.breadcrumb a{color:var(--text-3);text-decoration:none;}.breadcrumb span:last-child{color:var(--text-2);}
-    .page-label{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:10px;}
-    h1{font-size:2rem;font-weight:600;letter-spacing:-0.03em;line-height:1.2;color:var(--text);margin-bottom:14px;}
-    .page-intro{font-size:1.05rem;color:var(--text-2);font-weight:300;line-height:1.7;margin-bottom:36px;border-bottom:1px solid var(--border);padding-bottom:32px;}
-    h2{font-size:1.15rem;font-weight:600;letter-spacing:-0.02em;color:var(--text);margin:40px 0 12px;}
-    h3{font-size:0.95rem;font-weight:600;color:var(--text);margin:28px 0 8px;}
-    p{font-size:0.92rem;color:var(--text-2);margin-bottom:16px;}
-    ul,ol{padding-left:20px;margin-bottom:16px;}
-    li{font-size:0.92rem;color:var(--text-2);margin-bottom:6px;}li strong{color:var(--text);}
-    pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:20px;overflow-x:auto;margin:20px 0;}
-    code{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--text);line-height:1.7;}
-    p code,li code{background:var(--code-bg);border:1px solid var(--code-border);padding:1px 6px;border-radius:3px;font-size:0.8rem;}
-    .code-header{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--code-border);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:8px 16px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-3);}
-    .code-header+pre{border-radius:0 0 var(--radius) var(--radius);margin-top:0;}
-    .callout{border-radius:var(--radius);padding:14px 18px;margin:20px 0;font-size:0.88rem;border-left:3px solid;display:flex;gap:12px;align-items:flex-start;}
-    .callout-icon{flex-shrink:0;margin-top:1px;}
-    .callout.note{background:var(--accent-soft);border-color:var(--accent);color:var(--text-2);}
-    .callout.tip{background:#f0fdf4;border-color:#22c55e;color:#166534;}[data-theme="dark"] .callout.tip{background:#0d1f13;color:#4ade80;}
-    .callout.warning{background:#fef9ec;border-color:#f59e0b;color:#78600a;}[data-theme="dark"] .callout.warning{background:#1f1a0d;color:#c9a84c;}
-    .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:20px 0;}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:box-shadow var(--transition),border-color var(--transition);}
-    .card:hover{box-shadow:var(--shadow);border-color:var(--accent);}
-    .card-title{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:6px;}
-    .card-body{font-size:0.8rem;color:var(--text-3);line-height:1.5;}
-    .endpoint{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin:8px 0;}
-    .method{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;font-weight:500;padding:3px 8px;border-radius:3px;flex-shrink:0;}
-    .method.get{background:#dbeafe;color:#1d4ed8;}[data-theme="dark"] .method.get{background:#1e3a5f;color:#93c5fd;}
-    .method.post{background:#dcfce7;color:#15803d;}[data-theme="dark"] .method.post{background:#0d2818;color:#86efac;}
-    .method.delete{background:#fee2e2;color:#b91c1c;}[data-theme="dark"] .method.delete{background:#2d0e0e;color:#fca5a5;}
-    .endpoint-path{font-family:'IBM Plex Mono',monospace;font-size:0.84rem;color:var(--text);}
-    .table-wrap{overflow-x:auto;margin:20px 0;}
-    table{width:100%;border-collapse:collapse;font-size:0.87rem;}
-    th{background:var(--surface-2);color:var(--text);font-weight:600;text-align:left;padding:10px 14px;border-bottom:2px solid var(--border);font-size:0.82rem;}
-    td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top;}
-    tr:last-child td{border-bottom:none;}tr:hover td{background:var(--surface-2);}
-    .swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px;}
-    .swatch{width:40px;height:40px;border-radius:var(--radius);border:1px solid var(--border);flex-shrink:0;}
-    .token-table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:16px 0 32px;}
-    .token-table th{background:var(--surface-2);color:var(--text);font-weight:600;text-align:left;padding:10px 14px;border-bottom:2px solid var(--border);font-size:0.8rem;}
-    .token-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:middle;}
-    .token-table tr:last-child td{border-bottom:none;}tr:hover td{background:var(--surface-2);}
-    .token-name{font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--accent);}
-    .token-value{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--text-3);}
-    .token-swatch{width:20px;height:20px;border-radius:3px;border:1px solid var(--border);display:inline-block;vertical-align:middle;margin-right:8px;}
-    .step{display:flex;gap:16px;margin-bottom:28px;align-items:flex-start;}
-    .step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
-    .step-body h3{margin-top:0;}
-    .demo-gate{background:var(--surface-2);border:2px dashed var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;margin:32px 0;}
-    .demo-gate-title{font-weight:600;color:var(--text);font-size:1rem;margin-bottom:8px;}
-    .demo-gate-sub{font-size:0.85rem;color:var(--text-3);margin-bottom:20px;}
-    .demo-gate-btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 24px;border-radius:var(--radius);font-size:0.85rem;font-weight:600;text-decoration:none;transition:opacity 0.15s;}
-    .demo-gate-btn:hover{opacity:0.85;text-decoration:none;}
-    .page-nav{display:flex;justify-content:space-between;gap:12px;margin-top:56px;padding-top:28px;border-top:1px solid var(--border);}
-    .page-nav-btn{display:flex;flex-direction:column;gap:4px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:all var(--transition);flex:1;max-width:48%;}
-    .page-nav-btn:hover{border-color:var(--accent);box-shadow:var(--shadow);text-decoration:none;}
-    .page-nav-btn.next{text-align:right;}
-    .page-nav-label{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;}
-    .page-nav-title{font-size:0.875rem;font-weight:500;color:var(--accent);}
-    .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:80;}
-    @media(max-width:860px){
-      .menu-toggle{display:flex;}
-      .sidebar{transform:translateX(-100%);}
-      .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.15);}
-      .overlay.open{display:block;}
-      .main{margin-left:0;}
-      .content{padding:32px 20px 60px;}
-      h1{font-size:1.6rem;}
-      .card-grid{grid-template-columns:1fr;}
-      .page-nav{flex-direction:column;}.page-nav-btn{max-width:100%;}.page-nav-btn.next{text-align:left;}
-    }
-    @media print{.demo-banner,.topbar,.sidebar,.page-nav,.overlay{display:none!important;}.main{margin-left:0;}.content{padding:0;max-width:100%;}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Structure &mdash; GlobalDocs Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<script src="/pagefind/pagefind-ui.js"></script>
+<style>
+:root{--bg:#f9f8f6;--surface:#ffffff;--surface-2:#f2f1ef;--border:#e4e2dd;--text:#1a1917;--text-2:#6b6760;--text-3:#9c9890;--accent:#2a5bd7;--accent-soft:#edf1fd;--code-bg:#f2f1ef;--code-border:#dddbd6;--sidebar-w:272px;--header-h:52px;--radius:6px;--shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);--transition:0.18s ease}
+[data-theme="dark"]{--bg:#111110;--surface:#191918;--surface-2:#222220;--border:#2e2d2b;--text:#e8e6e1;--text-2:#9a9792;--text-3:#5c5a57;--accent:#4f7ef5;--accent-soft:#1a2340;--code-bg:#151514;--code-border:#2a2927;--shadow:0 1px 3px rgba(0,0,0,0.3),0 1px 2px rgba(0,0,0,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text-2);line-height:1.7;-webkit-font-smoothing:antialiased}
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px 0 0;z-index:100;gap:12px}
+.brand{display:flex;align-items:center;gap:8px;font-size:0.875rem;font-weight:600;color:var(--text);text-decoration:none;padding:0 20px;height:100%;border-right:1px solid var(--border);flex-shrink:0;width:var(--sidebar-w)}
+.brand-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;flex-shrink:0}
+.version-tag{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--text-3);background:var(--surface-2);border:1px solid var(--border);padding:1px 6px;border-radius:4px;margin-left:auto}
+.topbar-search{flex:1;max-width:400px}
+.topbar-right{display:flex;align-items:center;gap:12px;margin-left:auto}
+.theme-toggle{background:none;border:1px solid var(--border);border-radius:var(--radius);padding:5px 8px;cursor:pointer;color:var(--text-3);font-size:0.8rem;transition:var(--transition);display:flex;align-items:center;gap:4px}
+.theme-toggle:hover{background:var(--surface-2);color:var(--text)}
+.sidebar{position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:20px 0 40px;z-index:90}
+.nav-group{margin-bottom:24px}
+.nav-group-label{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);padding:0 20px 6px;display:block}
+.nav-link{display:block;padding:6px 20px;font-size:0.875rem;color:var(--text-2);text-decoration:none;border-left:2px solid transparent;transition:var(--transition)}
+.nav-link:hover{color:var(--text);background:var(--surface-2)}
+.nav-link.active{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent);font-weight:500}
+.main{margin-left:var(--sidebar-w);padding-top:var(--header-h);min-height:100vh}
+.content{max-width:720px;padding:48px 48px 80px}
+.page-label{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+h1{font-size:1.875rem;font-weight:600;color:var(--text);line-height:1.25;margin-bottom:12px}
+h2{font-size:1.25rem;font-weight:600;color:var(--text);margin:40px 0 12px;line-height:1.35}
+h3{font-size:1rem;font-weight:600;color:var(--text);margin:28px 0 8px}
+p{margin-bottom:16px}
+.page-intro{font-size:1.05rem;color:var(--text-2);margin-bottom:32px;line-height:1.65}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+ul,ol{margin:0 0 16px 20px}
+li{margin-bottom:6px}
+strong{color:var(--text);font-weight:600}
+code{font-family:'IBM Plex Mono',monospace;font-size:0.82em;background:var(--code-bg);border:1px solid var(--code-border);padding:1px 5px;border-radius:3px;color:var(--text)}
+hr{border:none;border-top:1px solid var(--border);margin:40px 0}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:var(--transition)}
+.card:hover{box-shadow:var(--shadow)}
+.card-title{font-size:0.875rem;font-weight:600;color:var(--text);margin-bottom:6px}
+.card-body{font-size:0.825rem;color:var(--text-2);line-height:1.5}
+.callout{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--radius);border:1px solid;margin:20px 0;font-size:0.875rem;line-height:1.6}
+.callout.note{background:var(--accent-soft);border-color:var(--accent);color:var(--text)}
+.callout.warning{background:#fef9ec;border-color:#d97706;color:#78350f}
+.callout.tip{background:#f0fdf4;border-color:#16a34a;color:#14532d}
+[data-theme="dark"] .callout.warning{background:#1c1200;border-color:#b45309;color:#fde68a}
+[data-theme="dark"] .callout.tip{background:#052e16;border-color:#15803d;color:#86efac}
+.callout-icon{flex-shrink:0;margin-top:1px}
+.code-header{display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);border:1px solid var(--code-border);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:6px 14px;font-size:0.75rem;font-family:'IBM Plex Mono',monospace;color:var(--text-3)}
+.copy-btn{background:none;border:none;cursor:pointer;color:var(--text-3);font-size:0.75rem;padding:2px 6px;border-radius:3px;font-family:'IBM Plex Mono',monospace;transition:var(--transition)}
+.copy-btn:hover{background:var(--border);color:var(--text)}
+pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:0 0 var(--radius) var(--radius);padding:16px;overflow-x:auto;margin:0 0 20px;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.6;color:var(--text)}
+pre code{background:none;border:none;padding:0;font-size:inherit}
+.code-header+pre{margin-top:0}
+pre:not(.code-header+pre){border-radius:var(--radius)}
+.table-wrap{overflow-x:auto;margin:20px 0}
+table{width:100%;border-collapse:collapse;font-size:0.875rem}
+th{background:var(--surface-2);color:var(--text);font-weight:600;font-size:0.8rem;text-align:left;padding:10px 14px;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.file-tree{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--radius);padding:16px;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:1.8;color:var(--text-2);margin:20px 0}
+.file-tree .dir{color:var(--text);font-weight:500}
+.file-tree .note{color:var(--text-3)}
+.endpoint{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.875rem}
+.endpoint:last-child{border-bottom:none}
+.method{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;font-weight:600;padding:3px 8px;border-radius:4px;min-width:56px;text-align:center}
+.method.get{background:#dbeafe;color:#1d4ed8}
+.method.post{background:#dcfce7;color:#15803d}
+.method.delete{background:#fee2e2;color:#dc2626}
+.method.patch{background:#fef3c7;color:#b45309}
+[data-theme="dark"] .method.get{background:#1e3a5f;color:#93c5fd}
+[data-theme="dark"] .method.post{background:#14532d;color:#86efac}
+[data-theme="dark"] .method.delete{background:#450a0a;color:#fca5a5}
+[data-theme="dark"] .method.patch{background:#451a03;color:#fde68a}
+.endpoint-path{font-family:'IBM Plex Mono',monospace;font-size:0.82rem;color:var(--text)}
+.endpoint-desc{color:var(--text-2);font-size:0.825rem;margin-left:auto}
+.param-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.68rem;padding:1px 6px;border-radius:3px;font-weight:500}
+.param-badge.required{background:#fee2e2;color:#dc2626}
+.param-badge.optional{background:var(--surface-2);color:var(--text-3)}
+[data-theme="dark"] .param-badge.required{background:#450a0a;color:#fca5a5}
+.token-swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid var(--border);vertical-align:middle;margin-right:4px}
+.color-preview{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+.color-chip{width:28px;height:28px;border-radius:4px;border:1px solid var(--border);cursor:pointer;transition:transform 0.1s}
+.color-chip:hover{transform:scale(1.15)}
+.page-nav{display:flex;justify-content:space-between;align-items:stretch;gap:12px;margin-top:56px;padding-top:32px;border-top:1px solid var(--border)}
+.page-nav a{flex:1;display:flex;flex-direction:column;padding:16px 20px;border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:var(--transition);gap:4px;color:var(--text-2)}
+.page-nav a:hover{box-shadow:var(--shadow);border-color:var(--accent)}
+.page-nav .nav-dir{font-size:0.72rem;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;font-family:'IBM Plex Mono',monospace}
+.page-nav .nav-title{font-size:0.875rem;font-weight:500;color:var(--text)}
+.page-nav .next{text-align:right}
+.page-nav .prev-placeholder{flex:1}
+.breadcrumb{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-3);margin-bottom:24px;display:flex;align-items:center;gap:6px}
+.breadcrumb span{opacity:0.5}
+@media print{.topbar,.sidebar,.page-nav{display:none}.main{margin-left:0}.content{padding:0}}
+@media (max-width:768px){:root{--sidebar-w:0px}.sidebar{transform:translateX(-272px);width:272px;transition:transform 0.25s ease}.sidebar.open{transform:translateX(0)}.menu-toggle{display:flex!important}.brand{width:auto}.topbar-search{max-width:200px}.content{padding:32px 24px 60px}}
+@media (min-width:769px){.menu-toggle{display:none}}
+.menu-toggle{background:none;border:none;cursor:pointer;color:var(--text-2);padding:8px;margin-left:8px}
 </style>
 </head>
 <body>
-<div class="demo-banner">✦ Live demo — content intentionally limited. Full template: <a href="https://gumroad.com" target="_blank">GlobalDocs Atlas on Gumroad →</a></div>
 <header class="topbar">
-  <div class="topbar-left">
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect y="2" width="18" height="2" rx="1" fill="currentColor"/><rect y="8" width="18" height="2" rx="1" fill="currentColor"/><rect y="14" width="18" height="2" rx="1" fill="currentColor"/></svg>
-    </button>
-    <a href="index.html" class="brand"><span class="brand-dot"></span>GlobalDocs Atlas</a>
-  </div>
+  <a href="index.html" class="brand">
+    <span class="brand-dot"></span>GlobalDocs Atlas<span class="version-tag">v1.0</span>
+  </a>
+  <div class="topbar-search"><div id="search"></div></div>
   <div class="topbar-right">
-    <span class="version-tag">v1.0 — Demo</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <svg class="icon-sun" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <svg class="icon-moon" viewBox="0 0 16 16" fill="none"><path d="M13.5 10A6 6 0 016 2.5a6 6 0 100 11 6 6 0 007.5-3.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     </button>
   </div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
 </header>
-<div class="overlay" id="overlay"></div>
-<div class="shell">
-  <nav class="sidebar" id="sidebar">
-    <div class="nav-group">
-      <div class="nav-group-label">Getting Started</div>
-      <a href="index.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M4 7h6M4 4.5h6M4 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Introduction</a>
-      <a href="quick-start.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M7 1L1 7.5h4.5V13L13 6.5H8.5V1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Quick Start</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Guides</div>
-      <a href="guide-structure.html" class="nav-link active"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M2 2h4v4H2zM8 2h4v4H8zM2 8h4v4H2zM8 8h4v4H8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Site Structure</a>
-      <a href="guide-customise.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Customisation</a>
-      <a href="guide-deploy.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M7 9V1M4 4l3-3 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 11h12v2H1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Deployment</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Reference</div>
-      <a href="ref-components.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="12" height="2" rx="1" fill="currentColor"/><rect x="1" y="8" width="8" height="2" rx="1" fill="currentColor"/><rect x="1" y="1" width="6" height="2" rx="1" fill="currentColor"/></svg>Components</a>
-      <a href="ref-tokens.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 5l4 4M9 5l-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Design Tokens</a>
-    </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Demo Templates</div>
-      <a href="demo-api.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><path d="M2 5l3-3 3 3M8 9l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 2v10M9 2v10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>API Docs Example</a>
-      <a href="demo-saas.html" class="nav-link"><svg class="nav-link-icon" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M1 6h12" stroke="currentColor" stroke-width="1.4"/><circle cx="3.5" cy="4.5" r="0.8" fill="currentColor"/><circle cx="6" cy="4.5" r="0.8" fill="currentColor"/></svg>SaaS Docs Example</a>
-    </div>
-  </nav>
-  <main class="main">
-    <div class="content">
-      <div class="breadcrumb"><a href="index.html">Docs</a> › <a href="index.html">Guides</a> › <span>Site Structure</span></div>
-      <div class="page-label">Guides</div>
-      
+<nav class="sidebar" id="sidebar">
+  <div class="nav-group">
+    <span class="nav-group-label">Getting Started</span>
+    <a href="index.html" class="nav-link">Introduction</a>
+    <a href="quick-start.html" class="nav-link">Quick Start</a>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-label">Guides</span>
+    <a href="guide-structure.html" class="nav-link active">Site Structure</a>
+    <a href="guide-customise.html" class="nav-link">Customisation</a>
+    <a href="guide-deploy.html" class="nav-link">Deployment</a>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-label">Reference</span>
+    <a href="ref-components.html" class="nav-link">Components</a>
+    <a href="ref-tokens.html" class="nav-link">Design Tokens</a>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-label">Demo Templates</span>
+    <a href="demo-api.html" class="nav-link">API Docs Example</a>
+    <a href="demo-saas.html" class="nav-link">SaaS Docs Example</a>
+  </div>
+</nav>
+<main class="main">
+<div style="background:#1a1917;color:#f9f8f6;text-align:center;padding:10px 16px;font-size:0.82rem;font-family:'IBM Plex Mono',monospace;line-height:1.6;position:sticky;top:52px;z-index:200;border-bottom:1px solid #333;">
+  🔍 Full-text search is included in the purchased template (Pagefind integration). The live demo currently shows the previous version without search — update coming this week.
+</div>
+  <div class="content" data-pagefind-body>
+    <div class="breadcrumb">Docs <span>&#8250;</span> Guides <span>&#8250;</span> Site Structure</div>
+    
+<div class="page-label">Guide</div>
 <h1>Site Structure</h1>
-<p class="page-intro">How GlobalDocs Atlas organises pages and navigation — and how to extend it for your own documentation.</p>
-
+<p class="page-intro">How GlobalDocs Atlas organises pages, navigation, content, and search &mdash; and how to extend it.</p>
 <h2>How pages work</h2>
-<p>Each page is a self-contained HTML file. There is no server, no build process, and no shared state between pages. The full template explains the three structural sections every page shares and which parts to edit versus which to leave unchanged.</p>
-
+<p>Each page is a self-contained HTML file. No server, no build process, no shared state. The browser loads each file directly. Every page has three sections: <strong>Topbar</strong> (brand, search, theme toggle), <strong>Sidebar</strong> (navigation, same across all pages), and <strong>Content area</strong> (unique per page).</p>
 <h2>File structure</h2>
-<div class="code-header"><span>Directory</span></div>
-<pre><code>globaldocs-atlas/
-├── index.html
-├── quick-start.html
-├── guide-structure.html
-├── guide-customise.html
-├── guide-deploy.html
-├── ref-components.html
-├── ref-tokens.html
-├── demo-api.html
-├── demo-saas.html
-├── README.md
-└── LICENSE.txt</code></pre>
-
+<div class="file-tree">
+  <div>globaldocs-atlas/</div>
+  <div>&#9500;&#9472;&#9472; index.html           <span class="note">&#8592; Introduction</span></div>
+  <div>&#9500;&#9472;&#9472; quick-start.html</div>
+  <div>&#9500;&#9472;&#9472; guide-structure.html  <span class="note">&#8592; This page</span></div>
+  <div>&#9500;&#9472;&#9472; guide-customise.html</div>
+  <div>&#9500;&#9472;&#9472; guide-deploy.html</div>
+  <div>&#9500;&#9472;&#9472; ref-components.html</div>
+  <div>&#9500;&#9472;&#9472; ref-tokens.html</div>
+  <div>&#9500;&#9472;&#9472; demo-api.html</div>
+  <div>&#9500;&#9472;&#9472; demo-saas.html</div>
+  <div>&#9500;&#9472;&#9472; <span class="dir">pagefind/</span>            <span class="note">&#8592; Generated by search indexer</span></div>
+  <div>&#9500;&#9472;&#9472; README.md</div>
+  <div>&#9492;&#9472;&#9472; LICENSE.txt</div>
+</div>
+<div class="callout note">
+  <span class="callout-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+  <span>The <code>pagefind/</code> folder is generated when you run <code>npx pagefind --site .</code>. It does not exist on first download. Include it when deploying.</span>
+</div>
 <h2>Navigation groups</h2>
-<p>The sidebar organises links into four groups. The full template includes complete instructions for renaming, reordering, and adding groups, as well as a naming convention table for new pages.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Group</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Getting Started</td><td>Onboarding pages &mdash; the first thing new users read</td></tr>
+    <tr><td>Guides</td><td>How-to content &mdash; explains how to accomplish specific tasks</td></tr>
+    <tr><td>Reference</td><td>Technical reference &mdash; components, tokens, API</td></tr>
+    <tr><td>Demo Templates</td><td>Example pages showing the template in context</td></tr>
+  </tbody>
+</table></div>
+<h2>Adding a new page</h2>
+<ol>
+  <li>Duplicate any existing <code>.html</code> file</li>
+  <li>Rename it (e.g. <code>guide-billing.html</code>)</li>
+  <li>Change the <code>&lt;title&gt;</code> tag</li>
+  <li>Replace content inside <code>&lt;div class="content"&gt;</code></li>
+  <li>Add a link in the sidebar of every page</li>
+  <li>Set <code>class="nav-link active"</code> only in the new file</li>
+  <li>Update breadcrumb and prev/next buttons</li>
+  <li>Run <code>npx pagefind --site .</code> to index the new page</li>
+</ol>
+<h2>Naming conventions</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Prefix</th><th>Use for</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><code>guide-</code></td><td>How-to content</td><td>guide-billing.html</td></tr>
+    <tr><td><code>ref-</code></td><td>Technical reference</td><td>ref-webhooks.html</td></tr>
+    <tr><td><code>demo-</code></td><td>Example pages</td><td>demo-enterprise.html</td></tr>
+    <tr><td>No prefix</td><td>Top-level pages</td><td>changelog.html</td></tr>
+  </tbody>
+</table></div>
 
-<div class="demo-gate">
-  <div class="demo-gate-title">Full content available in the complete template</div>
-  <div class="demo-gate-sub">This demo shows the layout and navigation. The purchased template includes complete, usable instructions for every section on this page.</div>
-  <a href="https://gumroad.com" class="demo-gate-btn" target="_blank">Get GlobalDocs Atlas →</a>
-</div>
-
-      <div class="page-nav">
-        <a href="quick-start.html" class="page-nav-btn"><span class="page-nav-label">← Previous</span><span class="page-nav-title">Quick Start</span></a>
-        <a href="guide-customise.html" class="page-nav-btn next"><span class="page-nav-label">Next →</span><span class="page-nav-title">Customisation</span></a>
-      </div>
-    </div>
-  </main>
-</div>
+    <nav class="page-nav">
+      <a href="quick-start.html" class="prev"><span class="nav-dir">&#8592; Previous</span><span class="nav-title">Quick Start</span></a>
+      <a href="guide-customise.html" class="next"><span class="nav-dir">Next &#8594;</span><span class="nav-title">Customisation</span></a>
+    </nav>
+  </div>
+</main>
 <script>
-(function(){
-  const html=document.documentElement;
-  const saved=localStorage.getItem('gda-theme');
-  const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-  html.setAttribute('data-theme',saved||(prefersDark?'dark':'light'));
-  document.getElementById('themeToggle').addEventListener('click',function(){
-    const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
-    html.setAttribute('data-theme',next);localStorage.setItem('gda-theme',next);
+const html=document.documentElement,btn=document.getElementById('themeToggle');
+const saved=localStorage.getItem('theme')||'light';
+html.setAttribute('data-theme',saved);
+btn.addEventListener('click',()=>{
+  const next=html.getAttribute('data-theme')==='light'?'dark':'light';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+});
+const menuBtn=document.getElementById('menuToggle'),sidebar=document.getElementById('sidebar');
+menuBtn.addEventListener('click',()=>sidebar.classList.toggle('open'));
+document.querySelectorAll('.copy-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const pre=b.closest('.code-header').nextElementSibling;
+    navigator.clipboard.writeText(pre.textContent).then(()=>{
+      b.textContent='Copied';setTimeout(()=>b.textContent='Copy',2000);
+    });
   });
-  const sb=document.getElementById('sidebar');const ov=document.getElementById('overlay');
-  function open(){sb.classList.add('open');ov.classList.add('open');}
-  function close(){sb.classList.remove('open');ov.classList.remove('open');}
-  document.getElementById('menuToggle').addEventListener('click',function(){sb.classList.contains('open')?close():open();});
-  ov.addEventListener('click',close);
-  sb.querySelectorAll('.nav-link').forEach(function(l){l.addEventListener('click',function(){if(window.innerWidth<=860)close();});});
-})();
+});
+window.addEventListener('DOMContentLoaded',()=>{
+  if(window.PagefindUI){new PagefindUI({element:'#search',showSubResults:true,resetStyles:false});}
+});
 </script>
 </body>
 </html>
